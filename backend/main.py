@@ -41,7 +41,7 @@ def home():
 @app.get("/scans")
 def list_scans():
     files = os.listdir("fingerprints")
-    scans = [f for f in files if f.endswith(".png")]
+    scans = [larawan for larawan in files if larawan.endswith(".png")]
     scans.sort(reverse=True)
     
     return {
