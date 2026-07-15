@@ -116,7 +116,7 @@ Captured Image
 
 text-align:center;
 font-family:Arial;
-margin-top:50px;
+margin-top:15px;
 
 }
 
