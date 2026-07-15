@@ -49,32 +49,51 @@ def list_scans():
     scans = [larawan for larawan in files if larawan.endswith(".png")]
     scans.sort(reverse=True)
     
+    items = []
+    for filename in scans:
+        try:
+            timestamp_str = filename.replace("scan_", "").replace(".png", "")
+            dt = datetime.strptime(timestamp_str, "%Y%m%d_%H%M%S")
+            iso_timestamp = dt.astimezone().isoformat()
+        except ValueError:
+            filepath = os.path.join(FINGERPRINTS_DIR, filename)
+            mtime = os.path.getmtime(filepath)
+            iso_timestamp = datetime.fromtimestamp(mtime).astimezone().isoformat()
+            
+        items.append({
+            "filename": filename,
+            "url": f"/images/{filename}",
+            "timestamp": iso_timestamp
+        })
+
     return {
         "count": len(scans),
-        "items": [
-            {
-                "filename": filename,
-                "url": f"/images/{filename}"
-            }
-            for filename in scans
-        ]
+        "items": items
     }
 
 
 @app.post("/capture")
 def capture():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    iso_timestamp = datetime.now().astimezone().isoformat()
+
     if not capture_lock.acquire(blocking=False):
-        raise HTTPException(status_code=409, detail="Scanner is busy")
+        raise HTTPException(
+            status_code=409, 
+            detail={"message": "Scanner is busy", "timestamp": iso_timestamp}
+        )
 
     try:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         image_name = f"scan_{timestamp}.png"
         filename = os.path.join(FINGERPRINTS_DIR, image_name)
 
         try:
             result = cs9711_capture.capture(filename)
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            raise HTTPException(
+                status_code=500, 
+                detail={"message": str(e), "timestamp": iso_timestamp}
+            )
 
         with open(filename, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
@@ -82,7 +101,8 @@ def capture():
         return {
             "success": True,
             "image": f"/images/{image_name}",
-            "image_base64": encoded_string
+            "image_base64": encoded_string,
+            "timestamp": iso_timestamp 
         }
     finally:
         capture_lock.release()
