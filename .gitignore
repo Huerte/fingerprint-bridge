@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Fingerprint Captures
+*.png
+backend/fingerprints/*
+!backend/fingerprints/.gitkeep
+
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+CONTEXT.md
