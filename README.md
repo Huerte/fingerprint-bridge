@@ -15,7 +15,6 @@
 
 ## Prerequisites
 - Python 3.10+
-- Node.js (22.18+ or >=24.12.0)
 - Administrator privileges
 
 ## 1. Driver Setup (First Time Only)
@@ -44,15 +43,17 @@ Windows blocks PyUSB by default. You must swap the default driver to `libusbK` t
 Open an **Administrator PowerShell** in the project root:
 
 ```powershell
-npm install
-npm run setup
-npm start
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
 ## 3. Usage
-1. Open `http://localhost:5173`
-2. Place finger on scanner.
-3. Click **Scan Fingerprint**.
+The API is now running at `http://localhost:8000`.
+
+- **Check Status**: `GET http://localhost:8000/`
+- **Capture Fingerprint**: `POST http://localhost:8000/capture`
+- **List Scans**: `GET http://localhost:8000/scans`
 
 ## Troubleshooting
 - **`Access denied`**: You didn't run PowerShell as Administrator.
