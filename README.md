@@ -1,5 +1,18 @@
 # FingerprintBridge
 
+<table>
+  <tr>
+    <td>
+      <img width="300" height="225" alt="image" src="https://github.com/user-attachments/assets/824a311d-88f3-493a-b66d-ac64b3e352a3" />
+    </td>
+    <td valign="middle">
+      <h1>HOW</h1>
+      <h1>TO</h1>
+      <h1>SETUP</h1>
+    </td>
+  </tr>
+</table>
+
 ## Prerequisites
 - Python 3.10+
 - Node.js (22.18+ or >=24.12.0)
