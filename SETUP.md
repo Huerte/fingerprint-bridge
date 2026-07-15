@@ -48,7 +48,7 @@ Connect it to a USB port and leave it plugged in.
 The installer is already in the repo:
 
 ```
-FingerprintBridge/requirements/zadig-2.9.exe
+FingerprintBridge/drivers/zadig-2.9.exe
 ```
 
 Double-click it. Run it **as Administrator** if prompted.
@@ -135,11 +135,7 @@ Check the backend folder:
 ls backend\
 ```
 
-You should see `libusb-1.0.dll` listed. It is already there per the project structure. If it is missing, copy it from the project root (where a copy also exists):
-
-```powershell
-copy libusb-1.0.dll backend\libusb-1.0.dll
-```
+You should see `libusb-1.0.dll` listed. It is already there per the project structure.
 
 `cs9711_capture.py` resolves the DLL relative to its own file location, so placing it inside `backend/` is required.
 
@@ -302,6 +298,8 @@ FingerprintBridge/
 │   └── fingerprints/
 │       └── latest.png        ← Overwritten on every scan
 │
+├── ChipSailing_Backup/       ← Original Windows drivers backup
+│
 ├── frontend/
 │   ├── src/
 │   │   ├── App.vue           ← Scan button, fetch logic, image display
@@ -309,10 +307,10 @@ FingerprintBridge/
 │   ├── package.json
 │   └── vite.config.js
 │
-├── requirements/
+├── drivers/
 │   └── zadig-2.9.exe         ← USB driver replacement tool
 │
-├── libusb-1.0.dll            ← Root-level copy (backup)
 ├── venv/                     ← Python virtual environment
+├── SETUP.md                  ← Setup & Run Guide
 └── CONTEXT.md                ← Full protocol and architecture notes
 ```
