@@ -89,7 +89,7 @@ Right-click the Start menu → **Windows PowerShell (Admin)** or **Terminal (Adm
 ### 2.2 Navigate to the project root
 
 ```powershell
-cd C:\Programs\___INTERN_PROJECTS\FingerprintBridge
+cd path\to\FingerprintBridge
 ```
 
 ### 2.3 Create the virtual environment
@@ -116,7 +116,7 @@ Your prompt should now show `(venv)` at the start.
 ### 2.5 Install Python dependencies
 
 ```powershell
-pip install fastapi uvicorn pyusb pillow python-multipart starlette
+pip install fastapi uvicorn pyusb pillow starlette
 ```
 
 ---
@@ -183,7 +183,7 @@ Open a **second terminal** (normal, non-admin is fine for Node).
 ### 5.1 Navigate to the frontend directory
 
 ```powershell
-cd C:\Programs\___INTERN_PROJECTS\FingerprintBridge\frontend
+cd path\to\FingerprintBridge\frontend
 ```
 
 ### 5.2 Install Node dependencies
@@ -220,22 +220,7 @@ Expected output:
 4. The button will show **Scanning...** while the capture runs.
 5. On success, the fingerprint image appears below the button.
 
-The backend console will log the USB command sequence:
-
-```
-Searching CS9711...
-CS9711 found
-Claiming interface
-Command sent: INIT
-Init response received
-Command sent: SCAN
-Received 8000 bytes
-Received 24 bytes
-Total 8024 bytes
-Image converted
-Saved fingerprint.png
-Command sent: RESET
-```
+The backend will process the USB command sequence and capture the image.
 
 The saved image lands at:
 
@@ -250,7 +235,7 @@ backend/fingerprints/latest.png
 ```
 Terminal 1 (Administrator PowerShell)
 ──────────────────────────────────────
-cd C:\Programs\___INTERN_PROJECTS\FingerprintBridge
+cd path\to\FingerprintBridge
 venv\Scripts\Activate.ps1
 cd backend
 uvicorn main:app --reload
@@ -258,7 +243,7 @@ uvicorn main:app --reload
 
 Terminal 2 (Normal PowerShell)
 ──────────────────────────────────────
-cd C:\Programs\___INTERN_PROJECTS\FingerprintBridge\frontend
+cd path\to\FingerprintBridge\frontend
 npm run dev
 
 
