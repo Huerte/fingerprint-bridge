@@ -24,6 +24,10 @@ async function scanFingerprint(){
                 }
             )
 
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.detail || `Capture failed: ${response.statusText}`);
+        }
 
         const data =
             await response.json()
