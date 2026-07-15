@@ -51,9 +51,24 @@ uvicorn main:app --reload
 ## 3. Usage
 The API is now running at `http://localhost:8000`.
 
+## Manual Tests
+After running the server, you can test the API using the following commands:
+
 - **Check Status**: `GET http://localhost:8000/`
 - **Capture Fingerprint**: `POST http://localhost:8000/capture`
 - **List Scans**: `GET http://localhost:8000/scans`
+
+Example commands:
+```powershell
+# Check Status
+Invoke-RestMethod -Uri http://localhost:8000/
+
+# Capture Fingerprint
+Invoke-RestMethod -Uri http://localhost:8000/capture -Method Post
+
+# List Scans
+Invoke-RestMethod -Uri http://localhost:8000/scans
+```
 
 ## Troubleshooting
 - **`Access denied`**: You didn't run PowerShell as Administrator.
