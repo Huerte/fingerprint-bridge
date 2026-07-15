@@ -1,7 +1,9 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from datetime import datetime
 from fastapi import FastAPI
 import cs9711_capture
+import base64
 import os
 
 
@@ -36,20 +38,37 @@ def home():
     }
 
 
+@app.get("/scans")
+def list_scans():
+    files = os.listdir("fingerprints")
+    scans = [f for f in files if f.endswith(".png")]
+    scans.sort(reverse=True)
+    
+    return {
+        "count": len(scans),
+        "items": [
+            {
+                "filename": filename,
+                "url": f"/images/{filename}"
+            }
+            for filename in scans
+        ]
+    }
+
+
 @app.post("/capture")
 def capture():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    image_name = f"scan_{timestamp}.png"
+    filename = f"fingerprints/{image_name}"
 
-    filename = (
-        "fingerprints/latest.png"
-    )
+    result = cs9711_capture.capture(filename)
 
-
-    result = cs9711_capture.capture(
-        filename
-    )
-
+    with open(filename, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
 
     return {
         "success": True,
-        "image": "/images/latest.png"
+        "image": f"/images/{image_name}",
+        "image_base64": encoded_string
     }
