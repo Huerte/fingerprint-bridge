@@ -136,53 +136,22 @@ def convert_image(raw):
     width = 68
     height = 118
 
-
-    img = Image.new(
-        "L",
-        (
-            width,
-            height
-        )
-    )
-
-
+    img = Image.new("L", (width, height))
     pixels = img.load()
 
-
     for y in range(SENSOR_HEIGHT):
-
         for x in range(SENSOR_WIDTH):
-
-            index = (
-                y * SENSOR_WIDTH
-                + x
-            )
-
-
+            index = y * SENSOR_WIDTH + x
             if index >= len(raw):
                 continue
 
-
             dy = y // 2
-
-            dx = (
-                x * 2
-                + (y % 2)
-            )
-
+            dx = x * 2 + (y % 2)
 
             if dx < width and dy < height:
-
                 pixels[dx, dy] = raw[index]
 
-
-    img = img.resize(
-        (
-            136,
-            236
-        )
-    )
-
+    img = img.resize((272, 472), Image.Resampling.LANCZOS)
 
     return img
 
@@ -198,8 +167,6 @@ def capture(output_file):
 
 
     try:
-
-        # Device is already configured by libusbK
 
         cfg = dev.get_active_configuration()
 
