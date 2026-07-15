@@ -106,24 +106,17 @@ def send_command(dev, command):
 # ==========================
 
 def read_image(dev):
-
-    block1 = dev.read(
-        EP_IN,
-        IMAGE_PART_1,
-        timeout=10000
-    )
-
-
-    block2 = dev.read(
-        EP_IN,
-        IMAGE_PART_2,
-        timeout=10000
-    )
-
-
-    return bytes(
-        block1 + block2
-    )
+    try:
+        # Request a larger buffer to capture the entire frame sent by the device
+        return bytes(dev.read(EP_IN, 16384, timeout=10000))
+    except Exception as e:
+        # Fallback double-read method if single read fails
+        try:
+            block1 = dev.read(EP_IN, 8000, timeout=10000)
+            block2 = dev.read(EP_IN, 3000, timeout=10000)
+            return bytes(block1 + block2)
+        except:
+            raise e
 
 
 
@@ -132,58 +125,44 @@ def read_image(dev):
 # ==========================
 
 def convert_image(raw):
+    raw_len = len(raw)
+    
+    if raw_len == 10976:
+        sensor_width = 49
+        sensor_height = 224
+        width = 98
+        height = 112
+        resize_dim = (196, 224)
+    elif raw_len == 9216:
+        sensor_width = 48
+        sensor_height = 192
+        width = 96
+        height = 96
+        resize_dim = (192, 192)
+    else:
+        # Default to 8024 bytes fallback (68x118)
+        sensor_width = 34
+        sensor_height = 236
+        width = 68
+        height = 118
+        resize_dim = (136, 236)
 
-    width = 68
-    height = 118
-
-
-    img = Image.new(
-        "L",
-        (
-            width,
-            height
-        )
-    )
-
-
+    img = Image.new("L", (width, height))
     pixels = img.load()
 
-
-    for y in range(SENSOR_HEIGHT):
-
-        for x in range(SENSOR_WIDTH):
-
-            index = (
-                y * SENSOR_WIDTH
-                + x
-            )
-
-
-            if index >= len(raw):
+    for y in range(sensor_height):
+        for x in range(sensor_width):
+            index = y * sensor_width + x
+            if index >= raw_len:
                 continue
 
-
             dy = y // 2
-
-            dx = (
-                x * 2
-                + (y % 2)
-            )
-
+            dx = x * 2 + (y % 2)
 
             if dx < width and dy < height:
-
                 pixels[dx, dy] = raw[index]
 
-
-    img = img.resize(
-        (
-            136,
-            236
-        )
-    )
-
-
+    img = img.resize(resize_dim)
     return img
 
 
@@ -252,10 +231,10 @@ def capture(output_file):
         )
 
 
-        if len(raw) != 8024:
+        if len(raw) not in (8024, 10976, 9216):
 
             raise RuntimeError(
-                f"Invalid frame size: {len(raw)}"
+                f"Invalid frame size: {len(raw)}. Expected 8024, 9216, or 10976 bytes."
             )
 
 
