@@ -178,8 +178,6 @@ def capture(output_file):
 
     try:
 
-        # Device is already configured by libusbK
-
         cfg = dev.get_active_configuration()
 
         interface = cfg[(0,0)]

@@ -19,13 +19,26 @@
 - Administrator privileges
 
 ## 1. Driver Setup (First Time Only)
-Windows blocks PyUSB by default. You must swap the driver to libusbK.
-1. Plug in the CS9711 scanner.
-2. Run `drivers/zadig-2.9.exe` as Administrator.
-3. Click **Options → List All Devices**.
-4. Select **ChipSailing CS9711** (VID `2541`, PID `0236`).
-5. Choose **libusbK** (NOT WinUSB).
-6. Click **Replace Driver**.
+Windows blocks PyUSB by default. You must swap the default driver to `libusbK` to allow the backend to communicate with the hardware. Follow these steps carefully:
+
+1. **Connect the Hardware**: Plug in the CS9711 scanner to an available USB port.
+2. **Launch Zadig**: Navigate to the `drivers` folder in this project and run `zadig-2.9.exe`. **You must right-click and run as Administrator.**
+3. **Show All Devices**: By default, Zadig hides devices that already have drivers. Click on **Options** in the top menu and check **List All Devices**.
+  
+   ![Option](assets/option.png)
+   ![List All Devices](assets/list.png)
+
+4. **Select the Scanner**: In the main dropdown menu, look for and select **ChipSailing CS9711**.
+   - *Verification*: Ensure the USB ID displayed matches `2541` (VID) and `0236` (PID).
+
+   ![Dropdown](assets/dropdown.png)
+
+5. **Choose the Target Driver**: On the right side of the green arrow, use the up/down arrows to select **libusbK**. Do NOT select WinUSB or libusb-win32.
+
+   ![Select Device](assets/driver.png)
+   ![Select Device](assets/driver2.png)
+   
+6. **Apply Changes**: Click the large **Replace Driver** (or **Install Driver**) button. Wait for the installation to complete successfully.
 
 ## 2. Installation & Run
 Open an **Administrator PowerShell** in the project root:
@@ -35,7 +48,6 @@ npm install
 npm run setup
 npm start
 ```
-*(This starts both the FastAPI backend on port 8000 and Vue frontend on port 5173)*
 
 ## 3. Usage
 1. Open `http://localhost:5173`
