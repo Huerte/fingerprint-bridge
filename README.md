@@ -60,3 +60,4 @@ npm start
 - **`CS9711 not found`**: Scanner isn't plugged in, or you didn't swap the driver to libusbK.
 
 ## STILL NOT WORKING ASK CHATGPT LOL!!!
+ 
